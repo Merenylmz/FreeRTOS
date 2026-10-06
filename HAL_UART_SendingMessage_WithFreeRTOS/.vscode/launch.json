@@ -1,0 +1,21 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Mikrocontroller Debug",
+            "cwd": "${workspaceFolder}",
+            "executable": "${workspaceFolder}/build/HAL_UART_SendingMessage_WithFreeRTOS.elf",
+            "request": "launch",
+            "type": "cortex-debug",
+            "servertype": "openocd",
+            "serverpath": "openocd",
+            "gdbPath": "gdb-multiarch",
+            "toolchainPrefix": "arm-none-eabi",
+            "configFiles": [
+                "interface/stlink.cfg",
+                "target/stm32f4x.cfg"
+            ],
+            "runToEntryPoint": "main",
+        }
+    ]
+}
