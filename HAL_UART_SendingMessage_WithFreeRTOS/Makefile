@@ -57,6 +57,10 @@ Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_cortex.c \
 Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal.c \
 Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_exti.c \
 Core/Src/system_stm32f4xx.c \
+Core/SystemView/SEGGER_RTT.c \
+Core/SystemView/SEGGER_SYSVIEW.c \
+Core/SystemView/SEGGER_SYSVIEW_Config_FreeRTOS.c \
+Core/SystemView/SEGGER_SYSVIEW_FreeRTOS.c \
 Middlewares/Third_Party/FreeRTOS/Source/croutine.c \
 Middlewares/Third_Party/FreeRTOS/Source/event_groups.c \
 Middlewares/Third_Party/FreeRTOS/Source/list.c \
@@ -145,6 +149,7 @@ C_INCLUDES =  \
 -IMiddlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS \
 -IMiddlewares/Third_Party/FreeRTOS/Source/portable/GCC/ARM_CM4F \
 -IDrivers/CMSIS/Device/ST/STM32F4xx/Include \
+-ICore/SystemView \
 -IDrivers/CMSIS/Include
 
 

@@ -24,6 +24,8 @@
 /* USER CODE BEGIN Includes */
 #include "stdio.h"
 #include "stdbool.h"
+#include "SEGGER_SYSVIEW.h"
+#include <string.h>
 
 /* USER CODE END Includes */
 
@@ -67,9 +69,9 @@ bool taskFlag = 1;
 void SystemClock_Config(void);
 static void MX_GPIO_Init(void);
 static void MX_USART2_UART_Init(void);
-void StartDefaultTask(void const * argument);
-void StartTask01(void const * argument);
-void StartTask02(void const * argument);
+void StartDefaultTask(void * argument);
+void StartTask01(void * argument);
+void StartTask02(void * argument);
 
 /* USER CODE BEGIN PFP */
 
@@ -88,6 +90,9 @@ int main(void)
 {
 
   /* USER CODE BEGIN 1 */
+  CoreDebug->DEMCR |= CoreDebug_DEMCR_TRCENA_Msk;
+  DWT->CYCCNT = 0;
+  DWT->CTRL |= DWT_CTRL_CYCCNTENA_Msk;
 
   /* USER CODE END 1 */
 
@@ -97,6 +102,7 @@ int main(void)
   HAL_Init();
 
   /* USER CODE BEGIN Init */
+  HAL_NVIC_SetPriorityGrouping(NVIC_PRIORITYGROUP_4);
   // setvbuf(stdout, NULL, _IONBF, 0);
 
   /* USER CODE END Init */
@@ -112,6 +118,8 @@ int main(void)
   MX_GPIO_Init();
   MX_USART2_UART_Init();
   /* USER CODE BEGIN 2 */
+  SEGGER_SYSVIEW_Conf();
+
 
   /* USER CODE END 2 */
 
@@ -135,15 +143,15 @@ int main(void)
   /* definition and creation of defaultTask */
   // osThreadDef(defaultTask, StartDefaultTask, osPriorityNormal, 0, 128);
   // defaultTaskHandle = osThreadCreate(osThread(defaultTask), NULL);
-  xTaskCreate(StartDefaultTask, "default", configMINIMAL_STACK_SIZE, 128, 1, &defaultTaskHandle);
+  xTaskCreate(StartDefaultTask, "default", 128, NULL, 1, &defaultTaskHandle);
 
   /* definition and creation of myTask01 */
   // osThreadDef(myTask01, StartTask01, osPriorityIdle, 0, 128);
   // myTask01Handle = osThreadCreate(osThread(myTask01), NULL);
-  xTaskCreate(StartTask01, "task1", configMINIMAL_STACK_SIZE, 128, 1, &myTask01Handle);
+  xTaskCreate(StartTask01, "task1", 128, NULL, 1, &myTask01Handle);
 
   /* definition and creation of myTask02 */
-  xTaskCreate(StartTask02, "task2", configMINIMAL_STACK_SIZE, 128, 1, &myTask02Handle);
+  xTaskCreate(StartTask02, "task2", 128, NULL, 1, &myTask02Handle);
 
 
   /* USER CODE BEGIN RTOS_THREADS */
@@ -305,7 +313,7 @@ static void MX_GPIO_Init(void)
 //   }
 //   /* USER CODE END StartTask01 */
 // }
-void StartDefaultTask(void const * argument)
+void StartDefaultTask(void * argument)
 {
   /* USER CODE BEGIN 5 */
   /* Infinite loop */
@@ -323,7 +331,7 @@ void StartDefaultTask(void const * argument)
 * @retval None
 */
 /* USER CODE END Header_StartTask01 */
-void StartTask01(void const * argument)
+void StartTask01(void * argument)
 {
   /* USER CODE BEGIN StartTask01 */
   /* Infinite loop */
@@ -332,11 +340,11 @@ void StartTask01(void const * argument)
     if (taskFlag)
     {
       taskFlag = 0;
-      const *message  = "test\r\n";
-      HAL_UART_Transmit(&huart2, (uint8_t *)message, strlen(message), HAL_MAX_DELAY);
+      const char *message  = "test\r\n";
+      //HAL_UART_Transmit(&huart2, (uint8_t *)message, strlen(message), 100);
       taskFlag = 1;
       taskYIELD();
-      osDelay(1);
+      vTaskDelay(1);
     }
     
   }
@@ -351,7 +359,7 @@ void StartTask01(void const * argument)
 * @retval None
 */
 /* USER CODE END Header_StartTask02 */
-void StartTask02(void const * argument)
+void StartTask02(void * argument)
 {
   /* USER CODE BEGIN StartTask02 */
   /* Infinite loop */
@@ -360,11 +368,12 @@ void StartTask02(void const * argument)
     if (taskFlag)
     {
       taskFlag = 0;
-      const *message  = "deneme\r\n";
-      HAL_UART_Transmit(&huart2, (uint8_t *)message, strlen(message), HAL_MAX_DELAY);
+      const char *message  = "deneme\r\n";
+      //HAL_UART_Transmit(&huart2, (uint8_t *)message, strlen(message), 100);
       taskFlag = 1;
       taskYIELD();
-      osDelay(1);
+      vTaskDelay(1);
+
       
     }
     

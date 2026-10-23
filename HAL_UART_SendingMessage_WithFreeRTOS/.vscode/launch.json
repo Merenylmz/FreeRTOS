@@ -7,15 +7,11 @@
             "executable": "${workspaceFolder}/build/HAL_UART_SendingMessage_WithFreeRTOS.elf",
             "request": "launch",
             "type": "cortex-debug",
-            "servertype": "openocd",
-            "serverpath": "openocd",
+            "servertype": "jlink",
+            "device": "STM32F407VG",
+            "interface": "swd",
             "gdbPath": "gdb-multiarch",
-            "toolchainPrefix": "arm-none-eabi",
-            "configFiles": [
-                "interface/stlink.cfg",
-                "target/stm32f4x.cfg"
-            ],
-            "runToEntryPoint": "main",
+            "runToEntryPoint": "main"
         }
     ]
 }

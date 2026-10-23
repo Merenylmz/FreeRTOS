@@ -1,7 +1,9 @@
 build/event_groups.o: \
  Middlewares/Third_Party/FreeRTOS/Source/event_groups.c \
  Middlewares/Third_Party/FreeRTOS/Source/include/FreeRTOS.h \
- Core/Inc/FreeRTOSConfig.h \
+ Core/Inc/FreeRTOSConfig.h Core/SystemView/SEGGER_SYSVIEW_FreeRTOS.h \
+ Core/SystemView/SEGGER_SYSVIEW.h Core/SystemView/SEGGER.h \
+ Core/SystemView/Global.h \
  Middlewares/Third_Party/FreeRTOS/Source/include/projdefs.h \
  Middlewares/Third_Party/FreeRTOS/Source/include/portable.h \
  Middlewares/Third_Party/FreeRTOS/Source/include/deprecated_definitions.h \
@@ -15,6 +17,10 @@ build/event_groups.o: \
  Middlewares/Third_Party/FreeRTOS/Source/include/timers.h
 Middlewares/Third_Party/FreeRTOS/Source/include/FreeRTOS.h:
 Core/Inc/FreeRTOSConfig.h:
+Core/SystemView/SEGGER_SYSVIEW_FreeRTOS.h:
+Core/SystemView/SEGGER_SYSVIEW.h:
+Core/SystemView/SEGGER.h:
+Core/SystemView/Global.h:
 Middlewares/Third_Party/FreeRTOS/Source/include/projdefs.h:
 Middlewares/Third_Party/FreeRTOS/Source/include/portable.h:
 Middlewares/Third_Party/FreeRTOS/Source/include/deprecated_definitions.h:

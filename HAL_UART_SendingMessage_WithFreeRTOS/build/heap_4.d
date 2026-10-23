@@ -1,7 +1,9 @@
 build/heap_4.o: \
  Middlewares/Third_Party/FreeRTOS/Source/portable/MemMang/heap_4.c \
  Middlewares/Third_Party/FreeRTOS/Source/include/FreeRTOS.h \
- Core/Inc/FreeRTOSConfig.h \
+ Core/Inc/FreeRTOSConfig.h Core/SystemView/SEGGER_SYSVIEW_FreeRTOS.h \
+ Core/SystemView/SEGGER_SYSVIEW.h Core/SystemView/SEGGER.h \
+ Core/SystemView/Global.h \
  Middlewares/Third_Party/FreeRTOS/Source/include/projdefs.h \
  Middlewares/Third_Party/FreeRTOS/Source/include/portable.h \
  Middlewares/Third_Party/FreeRTOS/Source/include/deprecated_definitions.h \
@@ -11,6 +13,10 @@ build/heap_4.o: \
  Middlewares/Third_Party/FreeRTOS/Source/include/list.h
 Middlewares/Third_Party/FreeRTOS/Source/include/FreeRTOS.h:
 Core/Inc/FreeRTOSConfig.h:
+Core/SystemView/SEGGER_SYSVIEW_FreeRTOS.h:
+Core/SystemView/SEGGER_SYSVIEW.h:
+Core/SystemView/SEGGER.h:
+Core/SystemView/Global.h:
 Middlewares/Third_Party/FreeRTOS/Source/include/projdefs.h:
 Middlewares/Third_Party/FreeRTOS/Source/include/portable.h:
 Middlewares/Third_Party/FreeRTOS/Source/include/deprecated_definitions.h:
