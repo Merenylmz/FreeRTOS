@@ -1,0 +1,17 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Mikrocontroller Debug",
+            "cwd": "${workspaceFolder}",
+            "executable": "${workspaceFolder}/build/HAL_ButtonRead_LED_FreeRTOS.elf",
+            "request": "launch",
+            "type": "cortex-debug",
+            "servertype": "jlink",
+            "device": "STM32F407VG",
+            "interface": "swd",
+            "gdbPath": "gdb-multiarch",
+            "runToEntryPoint": "main"
+        }
+    ]
+}
