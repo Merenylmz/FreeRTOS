@@ -43,6 +43,10 @@
 /* Private variables ---------------------------------------------------------*/
 osThreadId defaultTaskHandle;
 /* USER CODE BEGIN PV */
+
+void LedFlashTaskFunction(void *pvParameters);
+void ButtonReadTaskFunction(void *pvParameters);
+
 TaskHandle_t ledFlashTaskHandle = NULL;
 TaskHandle_t buttonReadTaskHandle = NULL;
 
@@ -92,6 +96,8 @@ int main(void)
   /* Initialize all configured peripherals */
   MX_GPIO_Init();
   /* USER CODE BEGIN 2 */
+  SEGGER_SYSVIEW_Conf();
+
   xTaskCreate(LedFlashTaskFunction, "Led Flash Task", (configMINIMAL_STACK_SIZE * 5), 128, 2, &ledFlashTaskHandle);
   xTaskCreate(ButtonReadTaskFunction, "Read Button Task", (configMINIMAL_STACK_SIZE * 5), 128, 2, &buttonReadTaskHandle);
 
@@ -192,10 +198,17 @@ static void MX_GPIO_Init(void)
   /* USER CODE END MX_GPIO_Init_1 */
 
   /* GPIO Ports Clock Enable */
+  __HAL_RCC_GPIOA_CLK_ENABLE();
   __HAL_RCC_GPIOD_CLK_ENABLE();
 
   /*Configure GPIO pin Output Level */
   HAL_GPIO_WritePin(GPIOD, GPIO_PIN_12|GPIO_PIN_13|GPIO_PIN_14|GPIO_PIN_15, GPIO_PIN_RESET);
+
+  /*Configure GPIO pin : PA0 */
+  GPIO_InitStruct.Pin = GPIO_PIN_0;
+  GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
+  GPIO_InitStruct.Pull = GPIO_NOPULL;
+  HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
 
   /*Configure GPIO pins : PD12 PD13 PD14 PD15 */
   GPIO_InitStruct.Pin = GPIO_PIN_12|GPIO_PIN_13|GPIO_PIN_14|GPIO_PIN_15;
@@ -211,22 +224,68 @@ static void MX_GPIO_Init(void)
 
 /* USER CODE BEGIN 4 */
 
-void LedFlashTaskFunction(void *pvParameters){
-  for(;;){
-    
-
-    vTaskDelay(1);
-  }
-}
+//? button kodu debounce için düzenlenmiştir. asıl kod ünlem ile belirtilmiştir.
 
 void ButtonReadTaskFunction(void *pvParameters){
+  // debounce için; 
+  uint8_t buttonState = GPIO_PIN_RESET;    
+  uint8_t lastButtonState = GPIO_PIN_RESET; 
+  uint8_t validatedState = GPIO_PIN_RESET;  
+  
+  TickType_t lastDebounceTime = 0;           
+  const TickType_t debounceDelay = pdMS_TO_TICKS(50);
+  //---------
+  for(;;){
+    buttonState = HAL_GPIO_ReadPin(GPIOA, GPIO_PIN_0);
+    if (buttonState != lastButtonState) {
+      lastDebounceTime = xTaskGetTickCount();
+    }
+    if ((xTaskGetTickCount() - lastDebounceTime) >= debounceDelay) {
+      
+      if (buttonState != validatedState) {
+        validatedState = buttonState;
+
+        if (validatedState == GPIO_PIN_SET) {
+          xTaskNotify(ledFlashTaskHandle, 0x00, eIncrement);
+        }
+      }
+    }
+
+    lastButtonState = buttonState;
+    vTaskDelay(pdMS_TO_TICKS(5));
+  }
+}
+
+
+//! aşağıdaki yoruma alınmış fonksiyon yazılması gereken kod sadece xTaskNotify yazılıyor geri kalanı button ! ! !
+  // void ButtonReadTaskFunction(void *pvParameters){
+    
+  //   for(;;){
+  //     if (HAL_GPIO_ReadPin(GPIOA, GPIO_PIN_0) == GPIO_PIN_SET)
+  //     {
+  //       vTaskDelay(50);
+  //       if (HAL_GPIO_ReadPin(GPIOA, GPIO_PIN_0) == GPIO_PIN_SET)
+  //       {
+  //         xTaskNotify(ledFlashTaskHandle, 0x00, eIncrement);
+  //       }
+  //     }
+
+  //     vTaskDelay(1);
+  //   }
+  // }
+void LedFlashTaskFunction(void *pvParameters){
   for(;;){
 
+    uint32_t plNotificationValue = 0;
+    if (xTaskNotifyWait(0, 0xFFFFFFFF, &plNotificationValue, portMAX_DELAY) == pdTRUE)
+    { 
+      HAL_GPIO_TogglePin(GPIOD, GPIO_PIN_12|GPIO_PIN_13|GPIO_PIN_14|GPIO_PIN_15);
+      vTaskDelay(pdMS_TO_TICKS(150));
+    }
 
     vTaskDelay(1);
   }
 }
-
 /* USER CODE END 4 */
 
 /* USER CODE BEGIN Header_StartDefaultTask */
